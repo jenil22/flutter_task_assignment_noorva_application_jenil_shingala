@@ -8,114 +8,113 @@ class ChatPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final screenHeight = size.height;
+
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              // Sticky App Bar at the top
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildHeaderIcon(
-                    context,
-                    Icons.arrow_back_ios_new,
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  _buildGuideHeaderButton(),
-                  _buildHeaderIcon(context, Icons.edit_note),
-                ],
+        child: Stack(
+          children: [
+            // Background Wizard Character - Fixed for the whole screen
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/bgimg.png',
+                fit: BoxFit.cover,
+                alignment: Alignment.bottomCenter,
               ),
-              const SizedBox(height: 10),
+            ),
 
-              // Scrollable content area
-              Expanded(
-                child: SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: Column(
+            // Bubbles (Background layer) - Responsive positioning
+            Positioned(
+              top: screenHeight * 0.4,
+              right: size.width * 0.3,
+              child: _buildBubble(15),
+            ),
+            Positioned(
+              top: screenHeight * 0.44,
+              right: size.width * 0.35,
+              child: _buildBubble(10),
+            ),
+
+            // Main UI Layer
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  // Sticky App Bar at the top
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SizedBox(height: 20),
-                      // Chat Bubble
-                      FadeInRight(
-                        duration: const Duration(milliseconds: 600),
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 60),
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: AppColors.cardBackground,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(32),
-                                topRight: Radius.circular(32),
-                                bottomLeft: Radius.circular(32),
-                                bottomRight: Radius.circular(8),
-                              ),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.05),
-                              ),
-                            ),
-                            child: const Text(
-                              'I see you are ready for guidance. I will walk with you from here. What should we plan out first?',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                height: 1.5,
+                      _buildHeaderIcon(
+                        context,
+                        Icons.arrow_back_ios_new,
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      _buildGuideHeaderButton(),
+                      _buildHeaderIcon(context, Icons.edit_note),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Scrollable content area
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 30),
+                          // Chat Bubble
+                          FadeInRight(
+                            duration: const Duration(milliseconds: 600),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                margin: EdgeInsets.only(left: size.width * 0.15),
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: AppColors.cardBackground.withOpacity(0.8),
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(32),
+                                    topRight: Radius.circular(32),
+                                    bottomLeft: Radius.circular(32),
+                                    bottomRight: Radius.circular(8),
+                                  ),
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.05),
+                                  ),
+                                ),
+                                child: Text(
+                                  'I see you are ready for guidance. I will walk with you from here. What should we plan out first?',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: size.width * 0.04,
+                                    height: 1.5,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
 
-                      // Wizard Character Image
-                      FadeInUp(
-                        duration: const Duration(milliseconds: 1000),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Positioned(
-                              top: 40,
-                              right: 120,
-                              child: _buildBubble(15),
-                            ),
-                            Positioned(
-                              top: 70,
-                              right: 135,
-                              child: _buildBubble(10),
-                            ),
-                            SizedBox(
-                              height: 400,
-                              child: Image.network(
-                                'https://img.freepik.com/premium-photo/3d-cartoon-character-old-man-wizard-standing-with-wooden-staff_1020697-94186.jpg',
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(
-                                      Icons.person,
-                                      size: 200,
-                                      color: Colors.white24,
-                                    ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          // Large spacer to let the wizard background show through proportionally
+                          SizedBox(height: screenHeight * 0.4),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
 
-              // Sticky Input Bar at the bottom
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20, top: 10),
-                child: FadeInUp(
-                  delay: const Duration(milliseconds: 400),
-                  child: const NoorvaInputBar(),
-                ),
+                  // Sticky Input Bar at the bottom
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20, top: 10),
+                    child: FadeInUp(
+                      delay: const Duration(milliseconds: 400),
+                      child: const NoorvaInputBar(),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -131,7 +130,7 @@ class ChatPage extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppColors.cardBackground.withOpacity(0.8),
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white.withOpacity(0.1)),
         ),
@@ -144,7 +143,7 @@ class ChatPage extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppColors.cardBackground.withOpacity(0.8),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
